@@ -1,0 +1,424 @@
+# echo "a. Display OS version, release number, kernel version"
+a. Display OS version, release number, kernel version
+# lsb_release -a
+No LSB modules are available.
+Distributor ID:	Pop
+Description:	Pop!_OS 21.10
+Release:	21.10
+Codename:	impish
+# lsb_release -d
+Description:	Pop!_OS 21.10
+# cat /etc/os-release
+NAME="Pop!_OS"
+VERSION="21.10"
+ID=pop
+ID_LIKE="ubuntu debian"
+PRETTY_NAME="Pop!_OS 21.10"
+VERSION_ID="21.10"
+HOME_URL="https://pop.system76.com"
+SUPPORT_URL="https://support.system76.com"
+BUG_REPORT_URL="https://github.com/pop-os/pop/issues"
+PRIVACY_POLICY_URL="https://system76.com/privacy"
+VERSION_CODENAME=impish
+UBUNTU_CODENAME=impish
+LOGO=distributor-logo-pop-os
+# hostnamectl
+ Static hostname: pop-os
+       Icon name: computer-desktop
+         Chassis: desktop
+      Machine ID: 3ac4a8904015e94d11826840620c9f99
+         Boot ID: 4442c81cfc2f42a39bd0eef7715e36df
+Operating System: Pop!_OS 21.10
+          Kernel: Linux 5.15.15-76051515-generic
+    Architecture: x86-64
+ Hardware Vendor: To Be Filled By O.E.M.
+  Hardware Model: To Be Filled By O.E.M.
+# uname -a
+Linux pop-os 5.15.15-76051515-generic #202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U x86_64 x86_64 x86_64 GNU/Linux
+# uname -s
+Linux
+# uname -r
+5.15.15-76051515-generic
+# uname -v
+#202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U
+# uname -m
+x86_64
+# uname -p
+x86_64
+# uname -o
+GNU/Linux
+# echo -e "\nb. Display top 10 processes in descending order"
+
+b. Display top 10 processes in descending order
+# top -b -o +%MEM
+# head -n 17
+top - 23:53:52 up 5 min,  3 users,  load average: 0.34, 0.37, 0.18
+Tasks: 367 total,   1 running, 366 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  15927.9 total,  11418.0 free,   2463.0 used,   2046.9 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.  12991.2 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   2164 starlig+  25   5 3403896 485144 315516 S   0.0   3.0   0:34.63 firefox
+   3586 starlig+  25   5 9285416 453132 265284 S   0.0   2.8   0:36.19 Isolate+
+   1421 starlig+  15  -5 4356896 394792 110464 S   6.7   2.4   0:10.44 gnome-s+
+   1112 mysql     25   5 2165964 384676  33264 S   0.0   2.4   0:00.98 mysqld
+   3347 starlig+  25   5 2957924 304656  98504 S   0.0   1.9   0:05.70 WebExte+
+   5549 starlig+  25   5 1795320 258920  68112 S   0.0   1.6   0:02.94 io.elem+
+   3215 starlig+  25   5 2436120 111992  89752 S   0.0   0.7   0:00.34 Privile+
+   5804 starlig+  15  -5  961216  91132  71164 S   0.0   0.6   0:00.36 konsole
+   1799 root      25   5  120048  88032  60576 S   0.0   0.5   0:00.38 python3
+   1826 root      25   5 2047232  75320  49360 S   0.0   0.5   0:00.20 dockerd
+# echo -e "\nc. Display processes with highest memory usage."
+
+c. Display processes with highest memory usage.
+# ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem
+# head
+    PID    PPID CMD                         %MEM %CPU
+   2164    1120 /usr/lib/firefox/firefox -n  2.9 12.0
+   3586    2164 /usr/lib/firefox/firefox -c  2.7 12.6
+   1421    1120 /usr/bin/gnome-shell         2.4  3.5
+   1112       1 /usr/sbin/mysqld             2.3  0.3
+   3347    2164 /usr/lib/firefox/firefox -c  1.8  1.9
+   5549    1402 io.elementary.appcenter -s   1.5  1.2
+   3215    2164 /usr/lib/firefox/firefox -c  0.6  0.1
+   5804    5803 konsole                      0.5  1.3
+   1799       1 /usr/bin/python3 /usr/lib/p  0.5  0.1
+# echo -e "\nd. Display current logged in user and log name."
+
+d. Display current logged in user and log name.
+# echo -e "Currently Logged: $(who -q | grep "=" | sed 's/.*=//') user(s)"
+Currently Logged: 3 user(s)
+# echo -e "User name: $USER (Login name: $LOGNAME)"
+User name: starlight (Login name: starlight)
+# echo -e "\ne. Display current shell, home directory, operating system type, current path setting, current working directory."
+
+e. Display current shell, home directory, operating system type, current path setting, current working directory.
+# echo -e "Current Shell: $SHELL"
+Current Shell: /usr/bin/zsh
+# echo -e "Home Directory: $HOME"
+Home Directory: /home/starlight
+# echo -e "Your O/s Type: $OSTYPE"
+Your O/s Type: linux-gnu
+# echo -e "PATH: $PATH"
+PATH: /home/starlight/.local/bin:/home/starlight/bin:/usr/local/bin:/usr/local/sbin:/home/starlight/.local/bin:/home/starlight/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/starlight/.spicetify
+# echo -e "Current working directory: `pwd`"
+Current working directory: /home/starlight/temp/os
+# echo "a. Display OS version, release number, kernel version"
+a. Display OS version, release number, kernel version
+# lsb_release -a
+No LSB modules are available.
+Distributor ID:	Pop
+Description:	Pop!_OS 21.10
+Release:	21.10
+Codename:	impish
+# lsb_release -d
+Description:	Pop!_OS 21.10
+# cat /etc/os-release
+NAME="Pop!_OS"
+VERSION="21.10"
+ID=pop
+ID_LIKE="ubuntu debian"
+PRETTY_NAME="Pop!_OS 21.10"
+VERSION_ID="21.10"
+HOME_URL="https://pop.system76.com"
+SUPPORT_URL="https://support.system76.com"
+BUG_REPORT_URL="https://github.com/pop-os/pop/issues"
+PRIVACY_POLICY_URL="https://system76.com/privacy"
+VERSION_CODENAME=impish
+UBUNTU_CODENAME=impish
+LOGO=distributor-logo-pop-os
+# hostnamectl
+ Static hostname: pop-os
+       Icon name: computer-desktop
+         Chassis: desktop
+      Machine ID: 3ac4a8904015e94d11826840620c9f99
+         Boot ID: 4442c81cfc2f42a39bd0eef7715e36df
+Operating System: Pop!_OS 21.10
+          Kernel: Linux 5.15.15-76051515-generic
+    Architecture: x86-64
+ Hardware Vendor: To Be Filled By O.E.M.
+  Hardware Model: To Be Filled By O.E.M.
+# uname -a
+Linux pop-os 5.15.15-76051515-generic #202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U x86_64 x86_64 x86_64 GNU/Linux
+# uname -s
+Linux
+# uname -r
+5.15.15-76051515-generic
+# uname -v
+#202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U
+# uname -m
+x86_64
+# uname -p
+x86_64
+# uname -o
+GNU/Linux
+# echo -e "\nb. Display top 10 processes in descending order"
+
+b. Display top 10 processes in descending order
+# top -b -o +%MEM
+# head -n 17
+top - 23:54:59 up 6 min,  3 users,  load average: 0.33, 0.36, 0.19
+Tasks: 337 total,   1 running, 336 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.5 us,  0.5 sy,  0.5 ni, 97.9 id,  0.0 wa,  0.0 hi,  0.5 si,  0.0 st
+MiB Mem :  15927.9 total,  11420.9 free,   2418.9 used,   2088.1 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.  13183.7 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   1421 starlig+  15  -5 4356908 400852 110484 S   0.0   2.5   0:13.85 gnome-s+
+   2164 starlig+  25   5 3516220 387148 209904 S   0.0   2.4   0:42.00 firefox
+   1112 mysql     25   5 2165964 384676  33264 S   0.0   2.4   0:01.08 mysqld
+   3586 starlig+  25   5 9137512 308588 114036 S   0.0   1.9   0:43.90 Isolate+
+   3347 starlig+  25   5 2930244 269204  98504 S   0.0   1.7   0:05.78 WebExte+
+   5549 starlig+  25   5 1795320 258920  68112 S   0.0   1.6   0:02.95 io.elem+
+   3215 starlig+  25   5 2436260 114172  90136 S   0.0   0.7   0:00.45 Privile+
+   6336 starlig+  15  -5  962756  92932  73044 S   0.0   0.6   0:00.28 konsole
+   1799 root      25   5  120048  88032  60576 S   0.0   0.5   0:00.38 python3
+   1152 root      15  -5 6497704  77752  35456 S   6.2   0.5   0:08.45 Xorg
+# echo -e "\nc. Display processes with highest memory usage."
+
+c. Display processes with highest memory usage.
+# ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem
+# head
+    PID    PPID CMD                         %MEM %CPU
+   1421    1120 /usr/bin/gnome-shell         2.4  3.8
+   2164    1120 /usr/lib/firefox/firefox -n  2.3 11.8
+   1112       1 /usr/sbin/mysqld             2.3  0.2
+   3586    2164 /usr/lib/firefox/firefox -c  1.8 12.4
+   3347    2164 /usr/lib/firefox/firefox -c  1.6  1.6
+   5549    1402 io.elementary.appcenter -s   1.5  0.9
+   3215    2164 /usr/lib/firefox/firefox -c  0.7  0.1
+   6336    1421 konsole                      0.5  4.6
+   1799       1 /usr/bin/python3 /usr/lib/p  0.5  0.1
+# echo -e "\nd. Display current logged in user and log name."
+
+d. Display current logged in user and log name.
+# echo -e "Currently Logged: $(who -q | grep "=" | sed 's/.*=//') user(s)"
+Currently Logged: 3 user(s)
+# echo -e "User name: $USER (Login name: $LOGNAME)"
+User name: starlight (Login name: starlight)
+# echo -e "\ne. Display current shell, home directory, operating system type, current path setting, current working directory."
+
+e. Display current shell, home directory, operating system type, current path setting, current working directory.
+# echo -e "Current Shell: $SHELL"
+Current Shell: /usr/bin/zsh
+# echo -e "Home Directory: $HOME"
+Home Directory: /home/starlight
+# echo -e "Your O/s Type: $OSTYPE"
+Your O/s Type: linux-gnu
+# echo -e "PATH: $PATH"
+PATH: /home/starlight/.local/bin:/home/starlight/bin:/usr/local/bin:/usr/local/sbin:/home/starlight/.local/bin:/home/starlight/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/starlight/.spicetify
+# echo -e "Current working directory: `pwd`"
+Current working directory: /home/starlight/temp/os
+# echo "a. Display OS version, release number, kernel version"
+a. Display OS version, release number, kernel version
+# lsb_release -a
+No LSB modules are available.
+Distributor ID:	Pop
+Description:	Pop!_OS 21.10
+Release:	21.10
+Codename:	impish
+# lsb_release -d
+Description:	Pop!_OS 21.10
+# cat /etc/os-release
+NAME="Pop!_OS"
+VERSION="21.10"
+ID=pop
+ID_LIKE="ubuntu debian"
+PRETTY_NAME="Pop!_OS 21.10"
+VERSION_ID="21.10"
+HOME_URL="https://pop.system76.com"
+SUPPORT_URL="https://support.system76.com"
+BUG_REPORT_URL="https://github.com/pop-os/pop/issues"
+PRIVACY_POLICY_URL="https://system76.com/privacy"
+VERSION_CODENAME=impish
+UBUNTU_CODENAME=impish
+LOGO=distributor-logo-pop-os
+# hostnamectl
+ Static hostname: pop-os
+       Icon name: computer-desktop
+         Chassis: desktop
+      Machine ID: 3ac4a8904015e94d11826840620c9f99
+         Boot ID: 4442c81cfc2f42a39bd0eef7715e36df
+Operating System: Pop!_OS 21.10
+          Kernel: Linux 5.15.15-76051515-generic
+    Architecture: x86-64
+ Hardware Vendor: To Be Filled By O.E.M.
+  Hardware Model: To Be Filled By O.E.M.
+# uname -a
+Linux pop-os 5.15.15-76051515-generic #202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U x86_64 x86_64 x86_64 GNU/Linux
+# uname -s
+Linux
+# uname -r
+5.15.15-76051515-generic
+# uname -v
+#202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U
+# uname -m
+x86_64
+# uname -p
+x86_64
+# uname -o
+GNU/Linux
+# echo -e "\nb. Display top 10 processes in descending order"
+
+b. Display top 10 processes in descending order
+# top -b -o +%MEM
+# head -n 17
+top - 23:55:24 up 6 min,  3 users,  load average: 0.22, 0.33, 0.18
+Tasks: 341 total,   1 running, 340 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  2.1 us,  0.5 sy,  0.0 ni, 96.9 id,  0.0 wa,  0.0 hi,  0.5 si,  0.0 st
+MiB Mem :  15927.9 total,  11381.5 free,   2426.7 used,   2119.7 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.  13147.1 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   1421 starlig+  15  -5 4619080 410812 110664 S   0.0   2.5   0:15.07 gnome-s+
+   2164 starlig+  25   5 3538052 387188 208764 S   0.0   2.4   0:44.59 firefox
+   1112 mysql     25   5 2165964 384676  33264 S   0.0   2.4   0:01.13 mysqld
+   3586 starlig+  25   5 9163336 333588 140084 S   0.0   2.0   0:45.96 Isolate+
+   3347 starlig+  25   5 2927212 267688 100304 S   0.0   1.6   0:06.05 WebExte+
+   5549 starlig+  25   5 1795320 258920  68112 S   0.0   1.6   0:02.95 io.elem+
+   3215 starlig+  25   5 2436260 112608  90136 S   0.0   0.7   0:00.53 Privile+
+   6576 starlig+  15  -5  966536  96640  76700 S   6.7   0.6   0:00.35 konsole
+   1799 root      25   5  120048  88032  60576 S   0.0   0.5   0:00.38 python3
+   1152 root      15  -5 6501220  81852  39556 S  20.0   0.5   0:09.59 Xorg
+# echo -e "\nc. Display processes with highest memory usage."
+
+c. Display processes with highest memory usage.
+# ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem
+# head
+    PID    PPID CMD                         %MEM %CPU
+   1421    1120 /usr/bin/gnome-shell         2.5  3.9
+   2164    1120 /usr/lib/firefox/firefox -n  2.3 11.7
+   1112       1 /usr/sbin/mysqld             2.3  0.2
+   3586    2164 /usr/lib/firefox/firefox -c  2.0 12.1
+   3347    2164 /usr/lib/firefox/firefox -c  1.6  1.6
+   5549    1402 io.elementary.appcenter -s   1.5  0.9
+   3215    2164 /usr/lib/firefox/firefox -c  0.6  0.1
+   6576    1421 konsole                      0.5  2.9
+   1799       1 /usr/bin/python3 /usr/lib/p  0.5  0.0
+# echo -e "\nd. Display current logged in user and log name."
+
+d. Display current logged in user and log name.
+# echo -e "Currently Logged: $(who -q | grep "=" | sed 's/.*=//') user(s)"
+Currently Logged: 3 user(s)
+# echo -e "User name: $USER (Login name: $LOGNAME)"
+User name: starlight (Login name: starlight)
+# echo -e "\ne. Display current shell, home directory, operating system type, current path setting, current working directory."
+
+e. Display current shell, home directory, operating system type, current path setting, current working directory.
+# echo -e "Current Shell: $SHELL"
+Current Shell: /usr/bin/zsh
+# echo -e "Home Directory: $HOME"
+Home Directory: /home/starlight
+# echo -e "Your O/s Type: $OSTYPE"
+Your O/s Type: linux-gnu
+# echo -e "PATH: $PATH"
+PATH: /home/starlight/.local/bin:/home/starlight/bin:/usr/local/bin:/usr/local/sbin:/home/starlight/.local/bin:/home/starlight/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/starlight/.spicetify
+# echo -e "Current working directory: `pwd`"
+Current working directory: /home/starlight/temp/os
+# echo "a. Display OS version, release number, kernel version"
+a. Display OS version, release number, kernel version
+# lsb_release -a
+No LSB modules are available.
+Distributor ID:	Pop
+Description:	Pop!_OS 21.10
+Release:	21.10
+Codename:	impish
+# lsb_release -d
+Description:	Pop!_OS 21.10
+# cat /etc/os-release
+NAME="Pop!_OS"
+VERSION="21.10"
+ID=pop
+ID_LIKE="ubuntu debian"
+PRETTY_NAME="Pop!_OS 21.10"
+VERSION_ID="21.10"
+HOME_URL="https://pop.system76.com"
+SUPPORT_URL="https://support.system76.com"
+BUG_REPORT_URL="https://github.com/pop-os/pop/issues"
+PRIVACY_POLICY_URL="https://system76.com/privacy"
+VERSION_CODENAME=impish
+UBUNTU_CODENAME=impish
+LOGO=distributor-logo-pop-os
+# hostnamectl
+ Static hostname: pop-os
+       Icon name: computer-desktop
+         Chassis: desktop
+      Machine ID: 3ac4a8904015e94d11826840620c9f99
+         Boot ID: 277d6220c509450dacb8696502a5a323
+Operating System: Pop!_OS 21.10
+          Kernel: Linux 5.15.15-76051515-generic
+    Architecture: x86-64
+ Hardware Vendor: To Be Filled By O.E.M.
+  Hardware Model: To Be Filled By O.E.M.
+# uname -a
+Linux pop-os 5.15.15-76051515-generic #202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U x86_64 x86_64 x86_64 GNU/Linux
+# uname -s
+Linux
+# uname -r
+5.15.15-76051515-generic
+# uname -v
+#202201160435~1642693824~21.10~97db1bb SMP Thu Jan 20 17:35:05 U
+# uname -m
+x86_64
+# uname -p
+x86_64
+# uname -o
+GNU/Linux
+# echo -e "\nb. Display top 10 processes in descending order"
+
+b. Display top 10 processes in descending order
+# top -b -o +%MEM
+# head -n 17
+top - 02:31:32 up  2:23,  3 users,  load average: 0.25, 0.48, 0.46
+Tasks: 367 total,   1 running, 366 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  1.1 us,  1.1 sy,  4.2 ni, 93.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  15927.9 total,   7647.6 free,   4925.3 used,   3354.9 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.  10574.5 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   2299 starlig+  25   5 4829752 835676 332464 S  31.2   5.1  16:26.33 firefox
+   5455 starlig+  25   5 3022752 436008 140860 S   0.0   2.7   1:47.64 Isolate+
+   3705 starlig+  25   5 9617936 422308 122116 S   0.0   2.6   3:34.05 Isolate+
+   1434 starlig+  15  -5 4652368 419288 118496 S   0.0   2.6   2:34.37 gnome-s+
+   8213 starlig+  25   5 4868744 407800 151168 S   0.0   2.5   0:15.00 telegra+
+   3881 starlig+  25   5 2954664 395156 119608 S  12.5   2.4   5:18.45 Isolate+
+   1124 mysql     25   5 2100428 384744  33364 S   0.0   2.4   0:17.59 mysqld
+   3406 starlig+  25   5 3038780 291908 100124 S   6.2   1.8   0:39.31 WebExte+
+   5182 starlig+  25   5 2825036 262432 130088 S   0.0   1.6   0:21.97 Isolate+
+   5690 starlig+  25   5 1795648 259732  68668 S   0.0   1.6   0:02.89 io.elem+
+# echo -e "\nc. Display processes with highest memory usage."
+
+c. Display processes with highest memory usage.
+# ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem
+# head
+    PID    PPID CMD                         %MEM %CPU
+   2299    1132 /usr/lib/firefox/firefox -n  5.1 11.4
+   5455    2299 /usr/lib/firefox/firefox -c  2.6  1.2
+   3705    2299 /usr/lib/firefox/firefox -c  2.5  2.4
+   1434    1132 /usr/bin/gnome-shell         2.5  1.7
+   8213    1434 telegram-desktop --          2.5  0.1
+   3881    2299 /usr/lib/firefox/firefox -c  2.4  3.7
+   1124       1 /usr/sbin/mysqld             2.3  0.2
+   3406    2299 /usr/lib/firefox/firefox -c  1.7  0.4
+   5182    2299 /usr/lib/firefox/firefox -c  1.6  0.2
+# echo -e "\nd. Display current logged in user and log name."
+
+d. Display current logged in user and log name.
+# echo -e "Currently Logged: $(who -q | grep "=" | sed 's/.*=//') user(s)"
+Currently Logged: 3 user(s)
+# echo -e "User name: $USER (Login name: $LOGNAME)"
+User name: starlight (Login name: starlight)
+# echo -e "\ne. Display current shell, home directory, operating system type, current path setting, current working directory."
+
+e. Display current shell, home directory, operating system type, current path setting, current working directory.
+# echo -e "Current Shell: $SHELL"
+Current Shell: /usr/bin/zsh
+# echo -e "Home Directory: $HOME"
+Home Directory: /home/starlight
+# echo -e "Your O/s Type: $OSTYPE"
+Your O/s Type: linux-gnu
+# echo -e "PATH: $PATH"
+PATH: /home/starlight/.local/bin:/home/starlight/bin:/usr/local/bin:/usr/local/sbin:/home/starlight/.local/bin:/home/starlight/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/starlight/.spicetify
+# echo -e "Current working directory: `pwd`"
+Current working directory: /home/starlight/temp/os
