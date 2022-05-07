@@ -1,62 +1,90 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int files[50], indexBlock[50], indBlock, n;
-void recurse1();
-void recurse2();
+int fArray[50], idx[50];
+int size=50;
 
-void recurse1(){
-    printf("Enter the index block: ");
-    scanf("%d", &indBlock);
-    if (files[indBlock] != 1){
-        printf("Enter the number of blocks and the number of files needed for the index %d on the disk: ", indBlock);
-        scanf("%d", &n);
-    }
-    else{
-        printf("%d is already allocated\n", indBlock);
-        recurse1();
-    }
-    recurse2();
-}
+void printArray(int *array);
+void undoAllocation(int *block, int *fArray,int f_idx, int block_index);
+int main(){
 
-void recurse2(){
-    int ch;
-    int flag = 0;
-    for (int i=0; i<n; i++){
-        scanf("%d", &indexBlock[i]);
-        if (files[indexBlock[i]] == 0)
-            flag++;
-    }
-    if (flag == n){
-        for (int j=0; j<n; j++){
-            files[indexBlock[j]] = 1;
+    int f_idx, f_size, block[50]={};
+
+    while(1){
+    index_input:
+        printf("Enter index block: ");
+        scanf("%d", &f_idx);
+        if(idx[f_idx] != 0){
+            printf("Index already allocated!\n");
+            goto index_input;
+        }else{
+            idx[f_idx] = 1;
         }
-        printf("Allocated\n");
-        printf("File Indexed\n");
-        for (int k=0; k<n; k++){
-            printf("%d ------> %d : %d\n", indBlock, indexBlock[k], files[indexBlock[k]]);
+
+    size:
+        printf("Enter the size of file: ");
+        scanf("%d", &f_size);
+        if(f_size > size){
+            printf("File size greater than available!\n");
+            goto size;
         }
-    }
-    else{
-        printf("File in the index is already allocated\n");
-        printf("Enter another indexed file\n");
-        recurse2();
-    }
-    printf("Do you want to enter more files?\n");
-    printf("Enter 1 for Yes, Enter 0 for No: ");
-    scanf("%d", &ch);
-    if (ch == 1)
-        recurse1();
-    else
-        exit(0);
-    return;
-}
 
-int main()
-{
-    for(int i=0;i<50;i++)
-        files[i]=0;
+    block:
+        printf("Enter the blocks for index %d: ", f_idx);
+        for(int i=0; i<f_size; i++){
+            scanf("%d", &block[i]);
+        }
 
-    recurse1();
+        for(int i=0; i<50; ++i){
+            if(block[i] != 0){
+                if(fArray[block[i]] != 1){
+                    fArray[block[i]] = 1;
+                    printf("Index %d ----> Allocated block %d : %d\n", f_idx, block[i], fArray[block[i]]);
+                    --size;
+                }else{
+                    printf("Block %d already allocated!\n", block[i]);
+                    undoAllocation(block, fArray, f_idx, i);
+                    goto block;
+                }
+            }
+            
+        }
+
+        printf("Allocated blocks: ");
+        printArray(fArray);
+
+        for(int i=0; i<50; ++i){
+            block[i]=0;
+        }
+
+        int quit;
+        printf("Enter 0 to add more files or 1 to quit: ");
+        scanf("%d", &quit);
+        if(quit == 1)
+            goto exit;
+    }
+
+exit:
     return 0;
+}
+
+void printArray(int *array){
+    for(int i=0; i<50; i++){
+        if(array[i] == 1){
+            printf("%d ", i);
+        }
+    }
+    printf("\n");
+}
+
+void undoAllocation(int *block, int *fArray, int f_idx, int block_index){
+    for(int i=0; i<50; ++i){
+        if(block[i] != 0 ){
+            if(fArray[block[i]] == 1 && i != block_index){
+                fArray[block[i]] = 0;
+                printf("Index %d ----> Block %d unallocated : %d\n", f_idx, block[i], fArray[block[i]]);
+                ++size;
+            }
+        }
+    }
 }
