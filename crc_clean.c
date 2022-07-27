@@ -27,7 +27,7 @@ int CRC(long int data, int key){
     int nonZeroIdx = dataIdx;
     int ignoreZero = 1;
 
-    while((dataIdx + lenOfKey) < lenOfData){
+    while((dataIdx + lenOfKey) <= lenOfData){
         if(ignoreZero){
             if(dataBuf[dataIdx] == '0'){
                 dataIdx++;
@@ -66,8 +66,8 @@ int main(){
     // printf("Key: ");
     // scanf("%d", &key);
 
-    data = 1010101010;
-    key = 11001;
+    data = 100100;
+    key = 1101;
 
     CRC(data, key);
 
