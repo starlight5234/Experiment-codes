@@ -8,8 +8,6 @@ AD = {
     }
 
 # Mnemonics OP Table
-MOPT = {"mover", "movem", "add", "sub", "mult", "div", "print", "read", "origin", "ltorg", "dc", "ds"}
-
 MOT = { 
     "DC": "DL,02,1",
     "DS": "DL,01,1",
@@ -100,7 +98,7 @@ def pass1(lines_tuple:tuple):
     # Check if 1st column is a label or mnemonic
     # If it is a label add/update to symbol table
     # If it is a mnemonic check for literals or symbols used
-    if lines_tuple[0].lower() not in MOPT and lines_tuple[1].lower() in MOPT:
+    if lines_tuple[0] not in MOT.keys() and lines_tuple[1] in MOT.keys():
         # print("Label:", lines_tuple[0])
         # print("Mnemonic:", lines_tuple[1])
         instruction_code(loc_counter, MOT[lines_tuple[1]],lines_tuple[2])
@@ -113,7 +111,7 @@ def pass1(lines_tuple:tuple):
             # SymTable.update({lines_tuple[0]:lines_tuple[2]})
             loc_counter = loc_counter + int(lines_tuple[2]) - 1 # -1 for sanity check
     
-    if lines_tuple[0].lower() in MOPT:
+    if lines_tuple[0] in MOT.keys():
         # print("Mnemonic:", lines_tuple[0])
 
         if lines_tuple[0].lower() == "origin":
