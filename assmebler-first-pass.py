@@ -1,3 +1,5 @@
+import sys
+
 # Assmebler directives
 # AD = {"start", "end"}
 AD = {
@@ -152,16 +154,18 @@ def pass1(lines_tuple:tuple):
     loc_counter += 1
 
 def printSymTable(SymTable: dict):
+    print('-------Symbol Table-------')
     print("{:<10} {:<10}".format('Label', 'Value(Address)'))
     for key, value in SymTable.items():
         print("{:<10} {:<10}".format(key, value))
-    print('')
+    print('\n')
 
 def printLiteralTable(LiteralTable: list):
+    print('------Literal Table------')
     print("{:<10} {:<10}".format('Literal', 'Value(Address)'))
     for literals in LiteralTable:
         print("{:<10} {:<10}".format(literals[0], literals[1]))
-    print('')
+    print('\n')
 
 def printPoolTable(PoolTable:list):
     print("Pool Table:", PoolTable)
@@ -170,11 +174,14 @@ def printPoolTable(PoolTable:list):
 
 lines_tuple = []
 
+f = open('Output.txt', 'w')
+sys.stdout = f
+
 for lines in asm_input.readlines():
     lines_tuple = lines.strip().split(" ")
     pass1(lines_tuple)
     
-# print("")
-# printSymTable(SymTable)
-# printLiteralTable(LiteralTable)
-# printPoolTable(PoolTable)
+print("")
+printSymTable(SymTable)
+printLiteralTable(LiteralTable)
+printPoolTable(PoolTable)
