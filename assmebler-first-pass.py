@@ -1,8 +1,26 @@
 # Assmebler directives
-AD = {"start", "end"}
+# AD = {"start", "end"}
+AD = {
+    "start": "AD,01,1",
+    "end": "AD,02,0"
+    }
 
 # Mnemonics OP Table
 MOPT = {"mover", "movem", "add", "sub", "mult", "div", "print", "read", "origin", "ltorg", "dc", "ds"}
+
+MOT = { 
+    "DC": "DL,02,1",
+    "DS": "DL,01,1",
+    'ADD': 'IS,01,2',
+    'SUB': 'IS,02,2',
+    'MUL': 'IS,03,2',
+    'MOVER':'IS,04,2',
+    'MOVEM':'IS,05,2',
+    'READ': 'IS,09,1',
+    'PRINT':'IS,10,1',
+    'ORIGIN':'AD,03,1',
+    'LTORG': 'AD,05,0'
+    }
 
 asm_input = open("dummy.asm", "r", encoding="utf-8")
 
@@ -13,6 +31,38 @@ PoolTable = [0]
 loc_counter = 0
 started = False
 literal_counter = 0
+literal_idx = 0
+
+def instruction_code(loc_counter:int ,instructions:str, *args):
+    global literal_idx
+
+    instructions_list = instructions.split(',')
+    pair = str("("+ instructions_list[0] + "," + instructions_list[1]+")")
+    if len(args) != int(instructions_list[2]) and instructions != MOT["LTORG"]:
+        print("{}\t ArguementError, expected {} got {}".format(loc_counter, instructions_list[2], len(args)))
+        exit()
+    if loc_counter == 0:
+        print("\t", pair, "\t" , end='')
+    else:
+        print(loc_counter, "\t" , pair, "\t" , end='')
+
+    for x in args:
+        # print(x, end='')
+        if instructions == MOT["LTORG"]:
+            z = x.strip("=F'")
+            print(f' (DL,02)(C,{z})', end='')
+        elif str(x).isdigit() == True:
+            print(f' (C,{x})', end='')
+        elif str(x).__contains__("REG"):
+            reg = ord(x.strip(",REG").lower()) - 96
+            print(f' (RG,{reg})', end='')
+        elif str(x) in list(SymTable):
+            print(f' (S,{list(SymTable).index(x)})', end='')
+        elif str(x) in [literals[0] for literals in LiteralTable]:
+            literal_idx += 1
+            print(f' (L,{literal_idx})', end='')
+
+    print('')
 
 def pass1(lines_tuple:tuple):
     global loc_counter, started, literal_counter
@@ -20,10 +70,11 @@ def pass1(lines_tuple:tuple):
     # print(f'{started} | {loc_counter}: {lines_tuple}')
 
     # START and END check
-    if lines_tuple[0].lower() in AD:
+    if lines_tuple[0].lower() in AD.keys():
         if started == False:
             if lines_tuple[0].lower() == "start":
                 started = True # Pass 1 has begun
+                instruction_code(loc_counter, AD["start"], lines_tuple[1])
                 if len(lines_tuple) > 1:
                     loc_counter = int(lines_tuple[1])
                     return
@@ -35,6 +86,7 @@ def pass1(lines_tuple:tuple):
                 print("Invalid code!")
                 exit()
             if lines_tuple[0].lower() == "end":
+                instruction_code(loc_counter, AD["end"])
                 for literals in LiteralTable:
                     if literals[1] == '?':
                         literals[1] = loc_counter
@@ -49,6 +101,7 @@ def pass1(lines_tuple:tuple):
     if lines_tuple[0].lower() not in MOPT and lines_tuple[1].lower() in MOPT:
         # print("Label:", lines_tuple[0])
         # print("Mnemonic:", lines_tuple[1])
+        instruction_code(loc_counter, MOT[lines_tuple[1]],lines_tuple[2])
         if lines_tuple[1].lower() == "dc":
             SymTable.update({lines_tuple[0]:loc_counter})
             # SymTable.update({lines_tuple[0]:lines_tuple[2]})
@@ -62,11 +115,15 @@ def pass1(lines_tuple:tuple):
         # print("Mnemonic:", lines_tuple[0])
 
         if lines_tuple[0].lower() == "origin":
+            instruction_code(loc_counter, MOT["ORIGIN"], lines_tuple[1])
             loc_counter = int(lines_tuple[1])
             return
 
         if lines_tuple[0].lower() == "ltorg":
+            # instruction_code(loc_counter, MOT["LTORG"])
             for literals in LiteralTable:
+                # print(literals[0])
+                instruction_code(loc_counter, MOT["LTORG"], literals[0])
                 literals[1] = loc_counter
                 loc_counter += 1
 
@@ -83,9 +140,13 @@ def pass1(lines_tuple:tuple):
                 literal_counter += 1
                 # print("Literal Count:", literal_counter)
                 LiteralTable.append([lines_tuple[2], '?'])
-            else:
+            elif lines_tuple[2] not in SymTable.keys():
                 # print("New Symbol:", lines_tuple[2])
                 SymTable.update({lines_tuple[2]:'?'})
+
+        # print(lines_tuple[2])
+        instruction_code(loc_counter, MOT[lines_tuple[0]], lines_tuple[1], lines_tuple[2])
+            
 
     # Increment Location counter address for next line
     loc_counter += 1
@@ -113,6 +174,7 @@ for lines in asm_input.readlines():
     lines_tuple = lines.strip().split(" ")
     pass1(lines_tuple)
     
-printSymTable(SymTable)
-printLiteralTable(LiteralTable)
-printPoolTable(PoolTable)
+# print("")
+# printSymTable(SymTable)
+# printLiteralTable(LiteralTable)
+# printPoolTable(PoolTable)
