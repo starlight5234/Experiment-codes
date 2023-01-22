@@ -8,6 +8,7 @@ asm_input = open("dummy.asm", "r", encoding="utf-8")
 
 SymTable = {}
 LiteralTable = []
+PoolTable = [0]
 
 loc_counter = 0
 started = False
@@ -69,6 +70,7 @@ def pass1(lines_tuple:tuple):
                 literals[1] = loc_counter
                 loc_counter += 1
 
+            PoolTable.append(literal_counter)
             literal_counter = 0
             return
         
@@ -100,6 +102,11 @@ def printLiteralTable(LiteralTable: list):
         print("{:<10} {:<10}".format(literals[0], literals[1]))
     print('')
 
+def printPoolTable(PoolTable:list):
+    print("Pool Table:", PoolTable)
+    # for pools in PoolTable:
+    #     print(pools)
+
 lines_tuple = []
 
 for lines in asm_input.readlines():
@@ -108,3 +115,4 @@ for lines in asm_input.readlines():
     
 printSymTable(SymTable)
 printLiteralTable(LiteralTable)
+printPoolTable(PoolTable)
