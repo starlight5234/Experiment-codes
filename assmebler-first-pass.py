@@ -45,9 +45,11 @@ def pass1(lines_tuple:tuple):
         # print("Label:", lines_tuple[0])
         if lines_tuple[1].lower() == "dc":
             SymTable.update({lines_tuple[0]:loc_counter})
+            # SymTable.update({lines_tuple[0]:lines_tuple[2]})
 
         if lines_tuple[1].lower() == "ds":
             SymTable.update({lines_tuple[0]:loc_counter})
+            # SymTable.update({lines_tuple[0]:lines_tuple[2]})
             loc_counter = loc_counter + int(lines_tuple[2]) - 1 # -1 for sanity check
     
     if lines_tuple[0].lower() in MOPT:
