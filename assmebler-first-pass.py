@@ -2,9 +2,7 @@
 AD = {"start", "end"}
 
 # Mnemonics OP Table
-MOPT = {"mover", "movem", "add", "sub", "mult", "div", "print", "read", "origin", "ltorg"}
-
-MDef = {"dc", "ds"}
+MOPT = {"mover", "movem", "add", "sub", "mult", "div", "print", "read", "origin", "ltorg", "dc", "ds"}
 
 asm_input = open("dummy.asm", "r", encoding="utf-8")
 
@@ -41,8 +39,9 @@ def pass1(lines_tuple:tuple):
     # Check if 1st column is a label or mnemonic
     # If it is a label add/update to symbol table
     # If it is a mnemonic check for literals or symbols used
-    if lines_tuple[0].lower() not in MOPT and lines_tuple[1].lower() in MDef:
+    if lines_tuple[0].lower() not in MOPT and lines_tuple[1].lower() in MOPT:
         # print("Label:", lines_tuple[0])
+        # print("Mnemonic:", lines_tuple[1])
         if lines_tuple[1].lower() == "dc":
             SymTable.update({lines_tuple[0]:loc_counter})
             # SymTable.update({lines_tuple[0]:lines_tuple[2]})
