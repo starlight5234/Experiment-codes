@@ -34,6 +34,11 @@ def pass1(lines_tuple:tuple):
                 print("Invalid code!")
                 exit()
             if lines_tuple[0].lower() == "end":
+                for literals in LiteralTable:
+                    if literals[1] == '?':
+                        literals[1] = loc_counter
+                        loc_counter += 1
+
                 started = False # Pass 1 has ended
                 return
     
