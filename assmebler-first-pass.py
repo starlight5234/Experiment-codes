@@ -7,6 +7,7 @@ MOPT = {"mover", "movem", "add", "sub", "mult", "div", "print", "read", "origin"
 asm_input = open("dummy.asm", "r", encoding="utf-8")
 
 SymTable = {}
+LiteralTable = []
 
 loc_counter = 0
 started = False
@@ -59,7 +60,10 @@ def pass1(lines_tuple:tuple):
             return
 
         if lines_tuple[0].lower() == "ltorg":
-            loc_counter += literal_counter
+            for literals in LiteralTable:
+                literals[1] = loc_counter
+                loc_counter += 1
+
             literal_counter = 0
             return
         
@@ -71,6 +75,7 @@ def pass1(lines_tuple:tuple):
             if lines_tuple[2].lower().rfind("=") != -1:
                 literal_counter += 1
                 # print("Literal Count:", literal_counter)
+                LiteralTable.append([lines_tuple[2], '?'])
             else:
                 # print("New Symbol:", lines_tuple[2])
                 SymTable.update({lines_tuple[2]:'?'})
@@ -82,6 +87,13 @@ def printSymTable(SymTable: dict):
     print("{:<10} {:<10}".format('Label', 'Value(Address)'))
     for key, value in SymTable.items():
         print("{:<10} {:<10}".format(key, value))
+    print('')
+
+def printLiteralTable(LiteralTable: list):
+    print("{:<10} {:<10}".format('Literal', 'Value(Address)'))
+    for literals in LiteralTable:
+        print("{:<10} {:<10}".format(literals[0], literals[1]))
+    print('')
 
 lines_tuple = []
 
@@ -90,3 +102,4 @@ for lines in asm_input.readlines():
     pass1(lines_tuple)
     
 printSymTable(SymTable)
+printLiteralTable(LiteralTable)
