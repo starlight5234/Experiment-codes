@@ -33,16 +33,23 @@ started = False
 literal_counter = 0
 literal_idx = 0
 
-def instruction_code(loc_counter:int ,instructions:str, *args):
+def instruction_code(loc_counter:int, isLabel:bool , instructions:str, *args):
     global literal_idx
 
     instructions_list = instructions.split(',')
     pair = str("("+ instructions_list[0] + "," + instructions_list[1]+")")
-    if len(args) != int(instructions_list[2]) and instructions != MOT["LTORG"]:
+
+    if isLabel and len(args) != int(instructions_list[2])+1:
+        print("{}\t ArguementError, expected {} got {}".format(loc_counter, int(instructions_list[2])+1, len(args)))
+        exit()
+
+    if len(args) != int(instructions_list[2]) and instructions != MOT["LTORG"] and not isLabel:
         print("{}\t ArguementError, expected {} got {}".format(loc_counter, instructions_list[2], len(args)))
         exit()
     if loc_counter == 0:
         print("\t", pair, "\t" , end='')
+    elif isLabel and args[0] in list(SymTable):
+        print(loc_counter, "\t" , '(S,{})'.format(list(SymTable).index(args[0])) , '\t' , pair.strip(' '), '\t', end='')
     else:
         print(loc_counter, "\t" , pair, "\t" , end='')
 
@@ -50,17 +57,17 @@ def instruction_code(loc_counter:int ,instructions:str, *args):
         # print(x, end='')
         if instructions == MOT["LTORG"]:
             z = x.strip("=F'")
-            print(' (DL,02)(C,{})'.format(z), end='')
+            print(' (DL,02)(C,{})'.format(z), end='\t')
         elif str(x).isdigit() == True:
-            print(' (C,{})'.format(x), end='')
+            print(' (C,{})'.format(x), end='\t')
         elif str(x).__contains__("REG"):
             reg = ord(x.strip(",REG").lower()) - 96
-            print(' (RG,{})'.format(reg), end='')
-        elif str(x) in list(SymTable):
-            print(' (S,{})'.format(list(SymTable).index(x)), end='')
+            print(' (RG,{})'.format(reg), end='\t')
+        elif str(x) in list(SymTable) and not isLabel:
+            print(' (S,{})'.format(list(SymTable).index(x)), end='\t')
         elif str(x) in [literals[0] for literals in LiteralTable]:
             literal_idx += 1
-            print(' (L,{})'.format(literal_idx), end='')
+            print(' (L,{})'.format(literal_idx), end='\t')
 
     print('')
 
@@ -74,7 +81,7 @@ def pass1(lines_tuple:tuple):
         if started == False:
             if lines_tuple[0].lower() == "start":
                 started = True # Pass 1 has begun
-                instruction_code(loc_counter, AD["start"], lines_tuple[1])
+                instruction_code(loc_counter, False, AD["start"], lines_tuple[1])
                 if len(lines_tuple) > 1:
                     loc_counter = int(lines_tuple[1])
                     return
@@ -86,7 +93,7 @@ def pass1(lines_tuple:tuple):
                 print("Invalid code!")
                 exit()
             if lines_tuple[0].lower() == "end":
-                instruction_code(loc_counter, AD["end"])
+                instruction_code(loc_counter, False, AD["end"])
                 for literals in LiteralTable:
                     if literals[1] == '?':
                         literals[1] = loc_counter
@@ -101,7 +108,6 @@ def pass1(lines_tuple:tuple):
     if lines_tuple[0] not in MOT.keys() and lines_tuple[1] in MOT.keys():
         # print("Label:", lines_tuple[0])
         # print("Mnemonic:", lines_tuple[1])
-        instruction_code(loc_counter, MOT[lines_tuple[1]],lines_tuple[2])
         if lines_tuple[1].lower() == "dc":
             SymTable.update({lines_tuple[0]:loc_counter})
             # SymTable.update({lines_tuple[0]:lines_tuple[2]})
@@ -110,20 +116,22 @@ def pass1(lines_tuple:tuple):
             SymTable.update({lines_tuple[0]:loc_counter})
             # SymTable.update({lines_tuple[0]:lines_tuple[2]})
             loc_counter = loc_counter + int(lines_tuple[2]) - 1 # -1 for sanity check
+
+        instruction_code(loc_counter, True, MOT[lines_tuple[1]], lines_tuple[0], lines_tuple[2])
     
     if lines_tuple[0] in MOT.keys():
         # print("Mnemonic:", lines_tuple[0])
 
         if lines_tuple[0].lower() == "origin":
-            instruction_code(loc_counter, MOT["ORIGIN"], lines_tuple[1])
+            instruction_code(loc_counter, False, MOT["ORIGIN"], lines_tuple[1])
             loc_counter = int(lines_tuple[1])
             return
 
         if lines_tuple[0].lower() == "ltorg":
-            # instruction_code(loc_counter, MOT["LTORG"])
+            # instruction_code(loc_counter, False, MOT["LTORG"])
             for literals in LiteralTable:
                 # print(literals[0])
-                instruction_code(loc_counter, MOT["LTORG"], literals[0])
+                instruction_code(loc_counter, False, MOT["LTORG"], literals[0])
                 literals[1] = loc_counter
                 loc_counter += 1
 
@@ -145,33 +153,34 @@ def pass1(lines_tuple:tuple):
                 SymTable.update({lines_tuple[2]:'?'})
 
         # print(lines_tuple[2])
-        instruction_code(loc_counter, MOT[lines_tuple[0]], lines_tuple[1], lines_tuple[2])
+        instruction_code(loc_counter, False, MOT[lines_tuple[0]], lines_tuple[1], lines_tuple[2])
             
 
     # Increment Location counter address for next line
     loc_counter += 1
 
 def printSymTable(SymTable: dict):
-    print('-------Symbol Table-------')
+    # print('-------Symbol Table-------')
     print("{:<10} {:<10}".format('Label', 'Value(Address)'))
     for key, value in SymTable.items():
         print("{:<10} {:<10}".format(key, value))
     print('\n')
 
 def printLiteralTable(LiteralTable: list):
-    print('------Literal Table------')
+    # print('------Literal Table------')
     print("{:<10} {:<10}".format('Literal', 'Value(Address)'))
     for literals in LiteralTable:
         print("{:<10} {:<10}".format(literals[0], literals[1]))
     print('\n')
 
 def printPoolTable(PoolTable:list):
-    print("Pool Table:", PoolTable)
+    # print("Pool Table:", PoolTable)
+    print(PoolTable)
     # for pools in PoolTable:
     #     print(pools)
 
 def printIntermediateCode(asm_input:__file__):
-    print("---Intermediate Code---")
+    # print("---Intermediate Code---")
     lines_tuple = []
     for lines in asm_input.readlines():
         lines_tuple = lines.strip().split(" ")
