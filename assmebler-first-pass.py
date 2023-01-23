@@ -50,17 +50,17 @@ def instruction_code(loc_counter:int ,instructions:str, *args):
         # print(x, end='')
         if instructions == MOT["LTORG"]:
             z = x.strip("=F'")
-            print(f' (DL,02)(C,{z})', end='')
+            print(' (DL,02)(C,{})'.format(z), end='')
         elif str(x).isdigit() == True:
-            print(f' (C,{x})', end='')
+            print(' (C,{})'.format(x), end='')
         elif str(x).__contains__("REG"):
             reg = ord(x.strip(",REG").lower()) - 96
-            print(f' (RG,{reg})', end='')
+            print(' (RG,{})'.format(reg), end='')
         elif str(x) in list(SymTable):
-            print(f' (S,{list(SymTable).index(x)})', end='')
+            print(' (S,{})'.format(list(SymTable).index(x)), end='')
         elif str(x) in [literals[0] for literals in LiteralTable]:
             literal_idx += 1
-            print(f' (L,{literal_idx})', end='')
+            print(' (L,{})'.format(literal_idx), end='')
 
     print('')
 
@@ -170,16 +170,29 @@ def printPoolTable(PoolTable:list):
     # for pools in PoolTable:
     #     print(pools)
 
-lines_tuple = []
+def printIntermediateCode(asm_input:__file__):
+    lines_tuple = []
+    for lines in asm_input.readlines():
+        lines_tuple = lines.strip().split(" ")
+        pass1(lines_tuple)
+    print("")
 
-f = open('Output.txt', 'w')
-sys.stdout = f
+original_stdout = sys.stdout
 
-for lines in asm_input.readlines():
-    lines_tuple = lines.strip().split(" ")
-    pass1(lines_tuple)
-    
-print("")
-printSymTable(SymTable)
-printLiteralTable(LiteralTable)
-printPoolTable(PoolTable)
+with open('Intermediate_Code.txt', 'w') as f:
+    sys.stdout = f
+    printIntermediateCode(asm_input)
+
+with open('Symbol_Table.txt', 'w') as f:
+    sys.stdout = f
+    printSymTable(SymTable)
+
+with open('Literal_Table.txt', 'w') as f:
+    sys.stdout = f
+    printLiteralTable(LiteralTable)
+
+with open('Pool_Table.txt', 'w') as f:
+    sys.stdout = f
+    printPoolTable(PoolTable)
+
+sys.stdout = original_stdout
