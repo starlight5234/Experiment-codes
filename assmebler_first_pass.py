@@ -26,7 +26,7 @@ asm_input = open("dummy.asm", "r", encoding="utf-8")
 
 SymTable = {}
 LiteralTable = []
-PoolTable = [0]
+PoolTable = []
 
 loc_counter = 0
 started = False
@@ -171,28 +171,33 @@ def printPoolTable(PoolTable:list):
     #     print(pools)
 
 def printIntermediateCode(asm_input:__file__):
+    print("---Intermediate Code---")
     lines_tuple = []
     for lines in asm_input.readlines():
         lines_tuple = lines.strip().split(" ")
         pass1(lines_tuple)
     print("")
 
-original_stdout = sys.stdout
+def PassOneImpl():
+    original_stdout = sys.stdout
 
-with open('Intermediate_Code.txt', 'w') as f:
-    sys.stdout = f
-    printIntermediateCode(asm_input)
+    with open('Intermediate_Code.txt', 'w') as f:
+        sys.stdout = f
+        PoolTable.append(0)
+        printIntermediateCode(asm_input)       
 
-with open('Symbol_Table.txt', 'w') as f:
-    sys.stdout = f
-    printSymTable(SymTable)
+    with open('Symbol_Table.txt', 'w') as f:
+        sys.stdout = f
+        printSymTable(SymTable)
 
-with open('Literal_Table.txt', 'w') as f:
-    sys.stdout = f
-    printLiteralTable(LiteralTable)
+    with open('Literal_Table.txt', 'w') as f:
+        sys.stdout = f
+        printLiteralTable(LiteralTable)
 
-with open('Pool_Table.txt', 'w') as f:
-    sys.stdout = f
-    printPoolTable(PoolTable)
+    with open('Pool_Table.txt', 'w') as f:
+        sys.stdout = f
+        printPoolTable(PoolTable)
 
-sys.stdout = original_stdout
+    sys.stdout = original_stdout
+
+PassOneImpl()
