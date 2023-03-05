@@ -1,0 +1,25 @@
+---- MNT ----
+Name	MDT index
+ADDM	1
+SUBM	6
+
+---- ALA ----
+ALA for ADDM
+Index	Arguement
+0	LOOP
+1	D1
+2	D2
+3	D3
+
+---- MDT ----
+LOC	Macro Content
+1	&LAB ADDM &ARG1, &ARG2, &ARG3
+2	A 1,&ARG1
+3	A 2,&ARG2
+4	A 3,&ARG3
+5	MEND
+6	&LAB SUBM &ARG1, &ARG2, &ARG3
+7	A 1,&ARG1
+8	A 2,&ARG2
+9	A 3,&ARG3
+10	MEND
