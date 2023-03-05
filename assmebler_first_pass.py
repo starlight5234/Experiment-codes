@@ -62,12 +62,21 @@ def instruction_code(loc_counter:int, isLabel:bool , instructions:str, *args):
             print(' (C,{})'.format(x), end='\t')
         elif str(x).__contains__("REG"):
             reg = ord(x.strip(",REG").lower()) - 96
+<<<<<<< HEAD
             print(' (RG,{})'.format(reg), end='\t')
         elif str(x) in list(SymTable) and not isLabel:
             print(' (S,{})'.format(list(SymTable).index(x)), end='\t')
         elif str(x) in [literals[0] for literals in LiteralTable]:
             literal_idx += 1
             print(' (L,{})'.format(literal_idx), end='\t')
+=======
+            print(' (RG,{})'.format(reg), end='')
+        elif str(x) in list(SymTable):
+            print(' (ST,{})'.format(list(SymTable).index(x)), end='')
+        elif str(x) in [literals[0] for literals in LiteralTable]:
+            literal_idx += 1
+            print(' (LT,{})'.format(literal_idx), end='')
+>>>>>>> c4bb8f9 (pass1: Make it clear)
 
     print('')
 
