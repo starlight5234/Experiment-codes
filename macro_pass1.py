@@ -4,6 +4,7 @@ Macro_Stack = []
 MNT = {}
 ALA = []
 MDT = []
+Sub_ALA = {}
 
 def MacroPass1():
     macro_just_begin = 0
@@ -40,6 +41,7 @@ def MacroPass1():
                     continue
 
             macro_def_list.pop(macro_def_list.index(macro_name))
+            Sub_ALA.update({macro_name:macro_def_list})
             macro_just_begin = 0
             continue        
 
@@ -76,6 +78,17 @@ def printMacroProcData():
                 i += 1
             print('')
 
+    for macro, args in Sub_ALA.items():
+        i = 0
+        # print(args)
+        print('Dummy ALA for {}'.format(macro))
+        print('Index\tDummy Args')
+        for x in args:
+            print('{}\t{}'.format(i,x))
+            i += 1
+        print('')
+
+    print('')
     print('---- MDT ----')
     print('LOC\tMacro Content')
     for lines in MDT:

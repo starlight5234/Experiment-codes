@@ -5,11 +5,26 @@ SUBM	6
 
 ---- ALA ----
 ALA for ADDM
-Index	Arguement
+Index	Argument
 0	LOOP
 1	D1
 2	D2
 3	D3
+
+Dummy ALA for ADDM
+Index	Dummy Args
+0	&LAB
+1	&ARG1
+2	&ARG2
+3	&ARG3
+
+Dummy ALA for SUBM
+Index	Dummy Args
+0	&LAB
+1	&ARG1
+2	&ARG2
+3	&ARG3
+
 
 ---- MDT ----
 LOC	Macro Content
