@@ -1,0 +1,23 @@
+# Do Not Edit
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+DIR="/usr/lib/jvm/java-8-openjdk-amd64"
+if [ ! -d "$DIR" ];
+then
+	echo "$DIR directory does not exist."
+	echo -e "${RED}Please make sure your jdk path is set properly{NC}"
+else
+	echo "JDK Detected"
+	echo "Completing setup"
+fi
+
+# -------------------------------------
+
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+echo -e "JAVA_HOME set as $JAVA_HOME"
+
+export PATH=${JAVA_HOME}/bin:${PATH}
+echo -e "PATH set as $PATH"
+
+export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar
+echo -e "HADOOP_CLASSPATH set as $HADOOP_CLASSPATH"

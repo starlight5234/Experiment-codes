@@ -1,0 +1,14 @@
+source ./wordcount.rc
+
+hadoop fs -mkdir /Expt2
+hadoop fs -put ./new.txt /Expt2/words.txt
+
+hadoop com.sun.tools.javac.Main WordCount.java
+jar cf wordCount.jar WordCount*.class
+
+hadoop jar wordCount.jar WordCount /words.txt /wc_output
+
+hadoop fs -ls /wc_output
+
+# If part-r-00000 exists then your experiment is completed
+hadoop fs -cat /wc_output/part-r-00000
