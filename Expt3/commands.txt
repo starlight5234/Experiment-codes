@@ -1,0 +1,11 @@
+hadoop fs -rm -r -f /Expt3
+
+hadoop fs -mkdir /Expt3
+
+hadoop fs -put matrix.txt /Expt3/
+
+mapred streaming -files mapper.py,reducer.py \
+-input /Expt3/matrix.txt \
+-output /Expt3/output \
+-mapper "python3 mapper.py" \
+-reducer "python3 reducer.py"
